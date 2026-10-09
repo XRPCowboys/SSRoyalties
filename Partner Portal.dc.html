@@ -235,102 +235,13 @@ summary::-webkit-details-marker{display:none}
       </sc-if>
     </div>
 
-    <div class="bj-section" style="padding:12px 56px 20px">
-      <sc-if value="{{ step3Locked }}" hint-placeholder-val="{{ true }}">
-        <div style="max-width:860px;margin:0 auto;background:rgba(255,255,255,0.7);border:1px solid #E5E7EB;border-radius:12px;padding:20px 28px;display:flex;align-items:center;gap:12px">
-          <div style="width:30px;height:30px;border-radius:50%;background:#CBD5E1;color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div>
-          <div>
-            <div style="font-family:'Fredoka',sans-serif;font-size:17px;font-weight:700;color:#666666">{{ v.payer }} Review &amp; Letter Dispatch</div>
-            <div style="font-size:12.5px;color:#666666">Unlocks after Step 2 is complete.</div>
-          </div>
-        </div>
-      </sc-if>
-      <sc-if value="{{ step3Open }}" hint-placeholder-val="{{ false }}">
-        <div style="max-width:860px;margin:0 auto;background:#FFFFFF;border:1px solid #E5E7EB;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.06);padding:26px 28px">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
-            <div style="width:30px;height:30px;border-radius:50%;background:#0A2540;color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div>
-            <div style="font-family:'Fredoka',sans-serif;font-size:19px;font-weight:700;color:#0A2540">{{ v.payer }} Review &amp; Letter Dispatch</div>
-          </div>
-          <p style="font-size:13.5px;line-height:1.65;color:#333333;margin:0 0 16px 42px">We found these {{ v.payerPlural }} in your roster. Add the IT or data team contact email for each one. You'll get one separate letter per {{ v.payerLower }}.</p>
-
-          <div style="border:1px solid #E5E7EB;border-radius:10px;overflow:hidden;margin-bottom:16px">
-            <div class="bj-optable" style="display:grid;grid-template-columns:1fr 1.3fr;gap:10px;padding:9px 16px;font-size:11px;font-weight:700;letter-spacing:0.04em;color:#666666;border-bottom:1px solid #E5E7EB;text-transform:uppercase">
-              <div>{{ v.payer }} Name</div><div>{{ v.payer }} Contact Email</div>
-            </div>
-            <sc-for list="{{ opRows }}" as="op" hint-placeholder-count="2">
-              <div class="bj-optable" style="display:grid;grid-template-columns:1fr 1.3fr;gap:10px;padding:10px 16px;align-items:center;border-bottom:1px solid #F1F5F9">
-                <div style="font-size:13.5px;font-weight:600;color:#333333">{{ op.name }}</div>
-                <input type="email" value="{{ op.itEmail }}" onChange="{{ op.setEmail }}" placeholder="it@operator.com" style="padding:10px 12px;border-radius:8px;border:1px solid #E5E7EB;font-size:13px;font-family:'Inter',sans-serif">
-              </div>
-            </sc-for>
-          </div>
-
-          <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
-            <button onClick="{{ h.generateLetters }}" disabled="{{ letterDisabled }}" style="{{ letterButtonStyle }}">{{ letterButtonLabel }}</button>
-            <sc-if value="{{ missingEmails }}" hint-placeholder-val="{{ false }}">
-              <span style="font-size:12.5px;color:#666666">Add a contact email for every {{ v.payerLower }} to continue.</span>
-            </sc-if>
-          </div>
-          <sc-if value="{{ letterError }}" hint-placeholder-val="{{ false }}">
-            <p style="font-size:12.5px;line-height:1.55;color:oklch(0.5 0.18 30);margin:12px 0 0">{{ letterError }}</p>
-          </sc-if>
-
-          <sc-if value="{{ lettersReady }}" hint-placeholder-val="{{ false }}">
-            <div style="margin-top:18px;background:oklch(0.97 0.03 145);border:1px solid oklch(0.88 0.06 145);border-radius:10px;padding:14px 16px;font-size:13px;line-height:1.6;color:oklch(0.38 0.12 145);font-weight:600">{{ lettersBanner }}</div>
-            <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">
-              <sc-for list="{{ letterRows }}" as="row" hint-placeholder-count="1">
-                <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:#F8FAFC;border:1px solid #E5E7EB;border-radius:8px;padding:10px 14px">
-                  <a href="{{ row.url }}" download="{{ row.filename }}" style="font-size:13px;font-weight:600;color:#0A2540;text-decoration:underline;word-break:break-all">{{ row.filename }}</a>
-                </div>
-              </sc-for>
-            </div>
-          </sc-if>
-
-          <sc-if value="{{ showSentRows }}" hint-placeholder-val="{{ false }}">
-            <div style="margin-top:18px;border-top:1px solid #E5E7EB;padding-top:16px">
-              <div style="font-size:12.5px;font-weight:700;color:#333333;margin-bottom:10px">Confirm which letters you've sent:</div>
-              <div style="display:flex;flex-direction:column;gap:8px">
-                <sc-for list="{{ sentStatusRows }}" as="row" hint-placeholder-count="1">
-                  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;background:#F8FAFC;border:1px solid #E5E7EB;border-radius:8px;padding:10px 14px">
-                    <span style="font-size:13px;color:#333333">{{ row.name }}</span>
-                    <sc-if value="{{ row.isSent }}" hint-placeholder-val="{{ false }}">
-                      <span style="font-size:12px;color:oklch(0.45 0.15 145);font-weight:600">✓ Marked sent {{ row.sentDate }}</span>
-                    </sc-if>
-                    <sc-if value="{{ row.isNotSent }}" hint-placeholder-val="{{ true }}">
-                      <button onClick="{{ row.markSent }}" disabled="{{ row.busy }}" style="background:#0A2540;color:#fff;font-family:'Inter',sans-serif;font-weight:700;font-size:12px;padding:7px 14px;border:none;border-radius:6px;cursor:pointer">{{ row.buttonLabel }}</button>
-                    </sc-if>
-                  </div>
-                </sc-for>
-              </div>
-            </div>
-          </sc-if>
-        </div>
-      </sc-if>
-    </div>
-
     <div class="bj-section" style="padding:0 56px 16px">
       <div style="max-width:860px;margin:0 auto;background:#F8FAFC;border:1px solid #E5E7EB;border-radius:10px;padding:16px 22px">
         <div style="font-size:12.5px;font-weight:700;color:#333333;margin-bottom:6px">What happens next</div>
-        <p style="font-size:12.5px;line-height:1.7;color:#666666;margin:0">Send each letter directly to its matching {{ v.payerLower }}, then click "Mark as sent" so our team knows to follow up. When a {{ v.payerLower }} responds, forward the reply to support@splitsecondroyalties.com. We run your 30-day reconciliation audit from the roster and records you uploaded. Uploads are held in a private bucket readable only by SSR administrators.</p>
+        <p style="font-size:12.5px;line-height:1.7;color:#666666;margin:0">Once your roster and records are uploaded, there's nothing else to do. We run your 30-day reconciliation audit from the roster and records you uploaded. Uploads are held in a private bucket readable only by SSR administrators.</p>
       </div>
     </div>
 
-    <div class="bj-section" style="padding:0 56px 28px">
-      <details style="max-width:860px;margin:0 auto;background:#FFFFFF;border:1px solid #E5E7EB;border-radius:10px;padding:16px 22px">
-        <summary style="font-size:13.5px;font-weight:700;color:#0A2540">Account Settings</summary>
-        <div style="margin-top:14px">
-          <label style="display:block;font-size:12.5px;font-weight:600;color:#333333;margin-bottom:6px">Internal System Integration Email</label>
-          <p style="font-size:12px;line-height:1.55;color:#666666;margin:0 0 10px">CC'd on operator data request letters generated for you. Leave blank to use {{ email }}.</p>
-          <div style="display:flex;gap:10px;flex-wrap:wrap">
-            <input type="email" value="{{ integrationEmail }}" onChange="{{ h.setIntegrationEmail }}" placeholder="integrations@yourcompany.com" style="flex:1;min-width:220px;padding:11px 13px;border-radius:8px;border:1px solid #E5E7EB;font-size:13.5px;font-family:'Inter',sans-serif">
-            <button onClick="{{ h.saveIntegrationEmail }}" disabled="{{ integrationEmailBusy }}" style="{{ integrationEmailButtonStyle }}">{{ integrationEmailButtonLabel }}</button>
-          </div>
-          <sc-if value="{{ integrationEmailMessage }}" hint-placeholder-val="{{ false }}">
-            <p style="font-size:12.5px;color:#666666;margin:10px 0 0">{{ integrationEmailMessage }}</p>
-          </sc-if>
-        </div>
-      </details>
-    </div>
   </sc-if>
 
   <div class="bj-section" style="padding:0 56px 28px">
@@ -516,7 +427,7 @@ class Component extends DCLogic {
       if (!rows.length) throw new Error('We could not find any rows in that file.');
       const map = mapHeaders(Object.keys(rows[0]));
       if (!map.wellName && !map.apiNumber) throw new Error('We could not find a Well Name or API Number column. Please use the sample template headers.');
-      if (!map.operator) throw new Error('We could not find an Operator column. Add an "Operator Name" column so we can prepare one letter per operator.');
+      if (!map.operator) throw new Error('We could not find an Operator column. Add an "Operator Name" column so we can match each well to its operator.');
       const get = (r, k) => (k ? String(r[k] ?? '').trim() : '');
       const wells = rows.map(r => ({
         wellName: get(r, map.wellName), apiNumber: get(r, map.apiNumber), operator: get(r, map.operator),
@@ -712,7 +623,7 @@ class Component extends DCLogic {
     const step1Done = wellCount > 0;
     const received = Number(s.pref.statementsReceived) || 0;
     const savedLink = s.pref.historicalRecordsLink || '';
-    const step2Done = step1Done && (received > 0 || !!savedLink);
+    const step2Done = (received > 0 || !!savedLink);
     const missingEmails = s.operators.some(o => !o.itEmail.trim());
 
     const rosterSummary = `${s.rosterFileName ? s.rosterFileName + ': ' : 'Roster on file: '}${wellCount} ${v.unit} across ${opCount} ${opCount === 1 ? v.payerLower : v.payerPlural}`;
@@ -743,8 +654,8 @@ class Component extends DCLogic {
       rosterPreview: s.wells.slice(0, 5),
       rosterMore: wellCount > 5 ? `+ ${wellCount - 5} more` : '',
 
-      step2Locked: !step1Done,
-      step2Open: step1Done,
+      step2Locked: false,
+      step2Open: true,
       statementsBusy: s.statementsBusy,
       statementsProgress: `Uploading ${s.statementsDone} of ${s.statementsTotal} files…`,
       statementsError: s.statementsError,
